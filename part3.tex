@@ -1,0 +1,15 @@
+\section{Simulated Annealing in Nomads}
+\par A simple mechanism would be added to not accept lions fit below a lower bound in nomad lions. The lower bound would be updated regularly such that lions that are bound to become nomad would be removed from the set of solutions if they do not meet the current lower bound of the nomads.
+
+\par Nomad lions have to rely on themselves. They don't have territories, they are always moving and they need to adapt to changes to the environment otherwise they die from it. This is a defining process of evolution.
+
+\par \textbf{To simulate this trait in the algorithm, a lower bound defined by the current least fit nomad is made.} In every iteration this lower bound is updated and lions that are to be added to nomads are checked if they're fitness is greater than the lower bound fitness (meaning they are less fit). If they are less fit, they are removed from the whole set of solutions. The procedure is as follows:
+
+\begin{align*}
+\begin{cases}
+   \text{Remove Lion}        & \text{if} f(\text{Lion})  > f_{LB} \\
+   \text{Add Lion to Nomads}        & \text{otherwise}
+\end{cases}
+\end{align*}
+
+where $f_{LB}$ is the current lower bound fitness of the nomad group.

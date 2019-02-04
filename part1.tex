@@ -1,0 +1,18 @@
+\section{Group Direction in Prides}
+\par The best position in the pride influences where lions in a pride would roam. When doing roaming, female and male lions would have a bit of influence from the direction and distance to the best position in the pride.
+
+\par This group influence is seen among lions as peers tend to swarm with each other and most lions that stray away from the pride will get attracted to where the most of his peers are located.
+
+\par \textbf{A new variable will be introduced, \%I which will determine how much the direction of the lion will be influenced by the direction to the best position}. The new modified roaming equation would be:
+\begin{align*}
+\text{Lion}' &= \text{Lion} + 2D \cdot rand(0,1) ({R1}\cdot(1-\%I) + R3\cdot\%I) + U(-1,1) \cdot \tan(\theta) \times D \times {R2} \\
+&\text{  where } R1 \cdot R2 = 0, ||R2|| = 1
+\end{align*}
+where Lion and Lion' is the previous and next position of the  lion, respectively, and D is the distance between the  lion's position and the selected point chosen by tournament selection in the pride's territory. The following figure shows the range of possible next positions of the lion.
+
+\par A newly included variable $R3$ will represent the direction vector from the Lion's position to the best position in the pride. $R3$ can be represented by:
+
+\begin{align*}
+  R3 = \frac{(\text{GBest} - \text{Lion})}{||\text{GBest} - \text{Lion}||}
+\end{align*}
+where GBest is the best position in the pride.

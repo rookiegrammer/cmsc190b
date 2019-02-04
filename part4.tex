@@ -1,0 +1,11 @@
+\section{Improved Ranked Selection Randomization}
+
+\par In selecting lions in a group sorted by fitness, with the best fit at the least index, the random selection of lions listed in a ranked order can be improved. By raising the random function that selects a number between 0 to 1 (inclusive) to a power k there will be higher chances for lower indexes in the list which represents better fit lions to be selected.
+
+\par \textbf{The new algorithm should adopt a new random selection function that allows to selects more higher fit lions than other lesser lions.} The new $rand(0,1)$ function will be modified for a new function
+$$
+rand(0,1,K) = U(0,1)^K
+$$
+where $U(0,1)$ is a random number between 0 to 1 with uniform distribution.
+
+\par A new variable $K$ will be introduced to the algorithm. This will represent the degree to which the random selection curve will tend to lean. When $K > 1$, the random selection function will produce more lower indices that has better fit lions. When $K = 1$, the function will be back to its normal setting. When $K < 1$, the function will produce more higher indices.
