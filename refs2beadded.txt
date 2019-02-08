@@ -1,0 +1,8 @@
+Kennedy, J.; Eberhart, R. (1995). "Particle Swarm Optimization"". Proceedings of IEEE International Conference on Neural Networks. IV. pp. 1942-1948 doi:10.1109/ICNN.1995.488968
+Kirkpatrick, S.; Gelatt Jr, C. D.; Vecchi, M. P. (1983). "Optimization by Simulated Annealing". Science. 220 (4598): 671-680. Bibcode:1983Sci...220..671K. CiteSeerX 10.1.1.123.7607. doi:10.1126/science.220.4598.671. JSTOR 1690046. PMID 17813860.
+Heinsohn, R.; C. Packer (1995). "Complex cooperative strategies in group-territorial African lions" (PDF). Science. 269 (5228): 1260-1262.
+Darwin, Charles (1869), On the Origin of Species by Means of Natural Selection or the Preservation of Favoured Races in the Struggle for Life (5th ed.), London: John Murray, p. 72
+Shepard, Donald (1968). "A two-dimensional interpolation function for irregularly-spaced data". Proceedings of the 1968 ACM National Conference. pp. 517-524.
+
+optional
+Richard Arnold Johnson; Dean W. Wichern (2007). Applied Multivariate Statistical Analysis. Pearson Prentice Hall. ISBM 978-0-13-187715-3. Retrieved 10 August 2012.

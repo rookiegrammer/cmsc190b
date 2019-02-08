@@ -3,7 +3,9 @@
 
 \par This group influence is seen among lions as peers tend to swarm with each other and most lions that stray away from the pride will get attracted to where the most of his peers are located.
 
-\par \textbf{A new variable will be introduced, \%I which will determine how much the direction of the lion will be influenced by the direction to the best position}. The new modified roaming equation would be:
+\par Similar to a group best in the Particle Swarm Optimizer (PSO), the group best in a Lion Pride will be a reference to where the lions in the pride are influenced to go to. Depending on a percentage variable, the influence of this global best in the path of roaming lions will vary.
+
+\textbf{A new variable will be introduced, \%I which will determine how much the direction of the lion will be influenced by the direction to the best position}. The new modified roaming equation would be:
 \begin{align*}
 \text{Lion}' &= \text{Lion} + 2D \cdot rand(0,1) ({R1}\cdot(1-\%I) + R3\cdot\%I) + U(-1,1) \cdot \tan(\theta) \times D \times {R2} \\
 &\text{  where } R1 \cdot R2 = 0, ||R2|| = 1
