@@ -8,4 +8,6 @@ rand(0,1,K) = U(0,1)^K
 $$
 where $U(0,1)$ is a random number between 0 to 1 with uniform distribution.
 
+\par The new equation creates a random number between 0 to 1 with \textbf{exponential distribution} such that lower values will tend to have higher spawn rate than higher values.
+
 \par A new variable $K$ will be introduced to the algorithm. This will represent the degree to which the random selection curve will tend to lean. When $K > 1$, the random selection function will produce more lower indices that has better fit lions. When $K = 1$, the function will be back to its normal setting. When $K < 1$, the function will produce more higher indices.
