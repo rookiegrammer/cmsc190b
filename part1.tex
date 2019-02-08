@@ -3,7 +3,7 @@
 
 \par This group influence is seen among lions as peers tend to swarm with each other and most lions that stray away from the pride will get attracted to where the most of his peers are located.
 
-\par \textbf{A new variable will be introduced, \%I which will determine how much the direction of the lion will be influenced by the direction to the best position}. The new modified roaming equation would be:
+\par \textbf{A new variable will be introduced, \%I which will determine how much the direction of the lion will be influenced by the direction to the best position of the pride}. The new modified roaming equation would be:
 \begin{align*}
 \text{Lion}' &= \text{Lion} + 2D \cdot rand(0,1) ({R1}\cdot(1-\%I) + R3\cdot\%I) + U(-1,1) \cdot \tan(\theta) \times D \times {R2} \\
 &\text{  where } R1 \cdot R2 = 0, ||R2|| = 1

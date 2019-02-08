@@ -3,7 +3,7 @@
 
 \par To produce better offsprings, nature has always arranged the better fit organisms to survive. In order to find better offsprings, female organisms would look for better fit organisms among the crowd to mate. To better model this trait in mating between multiple male lions to a female lion. The gene of the best male lion should better influence the gene of the offsprings.
 
-\par \textbf{To simulate this effect, an equation similar to inverse distance weighting is created that instead uses fitness difference as basis} to create a position that has a weighted average that relies more on better fit positions from multiple males.
+\par \textbf{To simulate this effect, an equation similar to inverse distance weighting \cite{idw} is created that instead uses fitness difference as basis} to create a position that has a weighted average that relies more on better fit positions from multiple males.
 $$
 \text{Lion Average} = \frac{\displaystyle\sum_{i=1}^{n} \left( \frac{\text{Lion}_i}{f_{\text{fem}} - f(\text{Lion}_i)} \right)}{\displaystyle\sum_{i=1}^{n} \left( \frac{1}{f_{\text{fem}} - f(\text{Lion}_i)} \right)}
 $$
