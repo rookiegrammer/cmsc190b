@@ -8,7 +8,7 @@ function [gbest,gbestval,fitcount] = LOA_func(fit_fun,dimension,population,itera
 print_lions = true;
 view_fit_range=[0 6];
 graph_function = false;
-view_3d_angle = [-45 -45 90];
+view_3d_angle     = [-45 -45 90];
 
 print_graphics = false;
 print_statistics = false;
