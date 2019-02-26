@@ -61,13 +61,12 @@ classdef Group < handle
             me.lbestval = pbestval;
         end
 
-        function do_pride_fem(me, roam_per, min_val, max_val, fit_fun, grp_inf)
+        function do_pride_fem(me, roam_per, min_val, max_val, fit_fun, grp_inf, sel_press)
                 fem_len = length(me.females);
                 
                 if fem_len == 0
                     return
                 end
-                
                 
                 roam_len = floor(roam_per * fem_len);
                 roam_ind = randperm(fem_len, roam_len);
@@ -111,10 +110,14 @@ classdef Group < handle
                 end
                 
                 roam_all = me.all_lions();
+                [~, roam_srt] = sort([roam_all.pbestval]);
+                roam_all = roam_all(roam_srt);
+                
                 roam_tsiz = max(2, ceil(me.improved/2));
+                
                 for i=1:length(roam_ind)
                     roam_cli = me.females(roam_ind(i));
-                    roam_tin = randperm(length(roam_all), roam_tsiz);
+                    roam_tin = randk(length(roam_all), roam_tsiz, sel_press);
                     roam_tim = false;
                     for j=1:roam_tsiz
                         roam_oth = roam_all(roam_tin(j));
@@ -136,16 +139,19 @@ classdef Group < handle
                 end
         end
 
-        function do_pride_mal(me, roam_per, fit_fun, min_val, max_val, grp_inf)
+        function do_pride_mal(me, roam_per, fit_fun, min_val, max_val, grp_inf, sel_press)
             male_len = length(me.males);
 
             roam_all = me.all_lions();
+            [~, roam_srt] = sort([roam_all.pbestval]);
+            roam_all = roam_all(roam_srt);
+            
             roam_len = ceil(roam_per * male_len);
 
             if roam_len > 0
                 for i=1:male_len
                     roam_cli = me.males(i);
-                    roam_tin = randperm(length(roam_all), roam_len);
+                    roam_tin = randk(length(roam_all), roam_len, sel_press);
                     roam_tim = false;
                     for j=1:roam_len
                         roam_oth = roam_all(roam_tin(j));
@@ -168,19 +174,18 @@ classdef Group < handle
             end
         end
 
-        function do_nomad_all(me, min_val, max_val, fit_fun)
+        function do_nomad_all(me, min_val, max_val, fit_fun, g_best, near_press)
             nomd_all = me.all_lions();
             nomd_len = length(nomd_all);
             nomd_bft = me.lbestval;
             for i=1:nomd_len
                 nomd_cli = nomd_all(i);
                 nomd_lft = nomd_cli.pbestval;
-                nomd_dim = length(nomd_cli.pbest);
                 nomd_imp = (nomd_lft - nomd_bft) / nomd_bft;
                 nomd_prb = 0.1 + min(0.5, nomd_imp);
 
                 if rand() <= nomd_prb
-                    nomd_cli.position = min_val + rand(nomd_dim,1)*(max_val-min_val);
+                    nomd_cli.random_value(g_best, min_val, max_val, near_press);
                     nomd_cli.evaluate(fit_fun, min_val, max_val);
                     if nomd_cli.pbestval < nomd_lft
                         me.improved = me.improved + 1;
@@ -241,12 +246,18 @@ classdef Group < handle
             me.females(imifem)=[]; % remove them here
 		end
 
-		function mate(me,mating_rate,mutation_prob,space_min,space_max,fit_fun)
+		function mate(me,mating_rate,mutation_prob,space_min,space_max,fit_fun, sel_press)
             tgrp_mln = length(me.males);
             tgrp_fln = length(me.females);
+            
+            [~, ind] = sort([me.females.pbestval]);
+            me.females = me.females(ind);
+            
+            [~, ind] = sort([me.males.pbestval]);
+            me.males = me.males(ind);
 
 			fheat = fix(mating_rate * tgrp_fln);% number of females in heat
-			ifheat = randperm(tgrp_fln, fheat); % indices of females in heat
+			ifheat = randk(tgrp_fln, fheat, sel_press); % indices of females in heat
 
             tgrp_typ = me.type;
             tgrp_mht = randi(tgrp_mln); % index/number of male/s in heat
@@ -257,10 +268,11 @@ classdef Group < handle
             for i=1:fheat
                 tgrp_fem = me.females(ifheat(i));
                 if tgrp_typ == 'p'
-                    imheat = randperm(tgrp_mln,tgrp_mht); % indices of males in heat
+                    imheat = randk(tgrp_mln,tgrp_mht, sel_press); % indices of males in heat
                     mheat = me.males(imheat);
                     offsprings = tgrp_fem.mate(mheat, mutation_prob, space_min, space_max); % mate
                 else
+                    tgrp_mht = randk(tgrp_mln, 1, sel_press);
                     offsprings = tgrp_fem.mate(me.males(tgrp_mht), mutation_prob, space_min, space_max);
                 end
 

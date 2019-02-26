@@ -1,17 +1,21 @@
 function [gbest,gbestval,fitcount] = LOA_func(fit_fun,dimension,population,iterations,space_min,space_max,varargin)
 
+cur_date = datetime;
+cur_date.Format = 'uuuu-MM-dd-HH-mm-ss';
+cur_date = char(cur_date);
+
 
 % -----------------------
 % Main Variables
 % -----------------------
 
 print_lions = true;
-view_fit_range=[0 6];
+view_fit_range=[0 5];
 graph_function = false;
 view_3d_angle     = [-45 -45 90];
 
-print_graphics = false;
-print_statistics = false;
+print_graphics = false; % Save Iterations to File
+print_statistics = true; % Save Statistics per Iteration to file
 
 prides_length = 4;
 
@@ -25,7 +29,7 @@ mutation_prob = 0.2;
 immigration_rate = 0.4;
 
 percent_influence = 0.4;
-do_annealing = false;
+do_annealing = true;
 selection_pressure = 2;
 nearness_pressure = 2;
 
@@ -212,14 +216,15 @@ if print_lions
     end
 
     if print_graphics
-        print(['loa-iter-0.png'], '-dpng');
+        print(['loa-iter-0-' cur_date '.png'], '-dpng');
     end
 
     hold off;
 end
 
 if print_statistics
-    file_id = fopen(['loa-iter-stats.txt'], 'wt');
+    LogicalStr = {'false', 'true'};
+    file_id = fopen(['loa-iter-stats-' cur_date '.txt'], 'wt');
     fprintf(file_id, 'Iterations: %g\n', iterations);
     fprintf(file_id, 'Function Evaluations Limit: %g\n', limit);
     fprintf(file_id, 'Population: %g\n\n', population);
@@ -229,7 +234,11 @@ if print_statistics
     fprintf(file_id, 'Percent Sex: %g\n\n', percent_sex);
     fprintf(file_id, 'Mating Rate: %g\n', mating_rate);
     fprintf(file_id, 'Mutation Probability: %g\n', mutation_prob);
-    fprintf(file_id, 'Immigration Rate: %g\n\n', immigration_rate);
+    fprintf(file_id, 'Immigration Rate: %g\n', immigration_rate);
+    fprintf(file_id, '\nPercent Group Influence: %g\n', percent_influence);
+    fprintf(file_id, 'Annealing On: %s\n', LogicalStr{do_annealing+1} );
+    fprintf(file_id, 'Ranked Selection Pressure: %g\n', selection_pressure);
+    fprintf(file_id, 'Near To Best Random Pressure: %g\n\n', nearness_pressure);
     fprintf(file_id, 'Dimensions: %g\n', dimension);
     fprintf(file_id, 'N-Dimension Space: %g:%g\n', space_min, space_max);
     fprintf(file_id, '\nFitness Iterations:\n%g', global_best_fitness);
@@ -248,16 +257,16 @@ for i=1:iterations
     for j=1:prides_length
         iter_gpr = pride_groups(j);
         iter_gpr.recount();
-        iter_gpr.do_pride_fem(percent_roam,space_min,space_max, adapt_fun, percent_influence);
-        iter_gpr.do_pride_mal(percent_roam, adapt_fun,space_min,space_max, percent_influence);
-        iter_gpr.mate(mating_rate,mutation_prob,space_min,space_max,adapt_fun);
+        iter_gpr.do_pride_fem(percent_roam,space_min,space_max, adapt_fun, percent_influence,selection_pressure);
+        iter_gpr.do_pride_mal(percent_roam, adapt_fun,space_min,space_max, percent_influence,selection_pressure);
+        iter_gpr.mate(mating_rate,mutation_prob,space_min,space_max,adapt_fun,selection_pressure);
         iter_gpr.equilibriate(nomad_group,percent_sex);
         pride_groups(j) = iter_gpr;
     end
 
     nomad_group.recount();
-    nomad_group.do_nomad_all(space_min, space_max, adapt_fun);
-	nomad_group.mate(mating_rate,mutation_prob,space_min,space_max,adapt_fun);
+    nomad_group.do_nomad_all(space_min, space_max, adapt_fun, global_best, nearness_pressure);
+	nomad_group.mate(mating_rate,mutation_prob,space_min,space_max,adapt_fun,selection_pressure);
 	nomad_group.invade(pride_groups);
 
     for j=1:prides_length
@@ -306,7 +315,7 @@ for i=1:iterations
         end
 
         if print_graphics
-            print(['loa-iter-' num2str(i) '.png'], '-dpng');
+            print(['loa-iter-' num2str(i) '-' cur_date '.png'], '-dpng');
         end
 
         hold off;
