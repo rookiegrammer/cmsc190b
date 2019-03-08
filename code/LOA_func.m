@@ -9,14 +9,20 @@ cur_date = char(cur_date);
 % Main Variables
 % -----------------------
 
-print_lions = true;
+% ________OPTIONS________
 view_fit_range=[0 5];
-graph_function = false;
 view_3d_angle     = [-45 -45 90];
 
-print_graphics = false; % Save Iterations to File
+graph_function = false;
+print_lions = false;
+print_graphics = false; % Save Iterations Images to File
 print_statistics = true; % Save Statistics per Iteration to file
+print_all_fitness = true;
+print_end_population = true;
 
+limit = 15000000;
+
+% ______PARAMETERS_______
 prides_length = 4;
 
 percent_nomad = 0.2;
@@ -28,12 +34,11 @@ mutation_prob = 0.2;
 
 immigration_rate = 0.4;
 
+% ____NEW_PARAMETERS_____
 percent_influence = 0.4;
 do_annealing = true;
 selection_pressure = 2;
 nearness_pressure = 2;
-
-limit = 150000;
 
 % -----------------------
 
@@ -111,7 +116,7 @@ for i=1:prid_end
     else
         prid_grp = Lion.empty(0,length(rand_pop));
     end
-    
+
     % Put to pride
     for j=1:prid_szs
         if length(rand_pop) <= 0
@@ -121,12 +126,12 @@ for i=1:prid_end
         prid_grp(j) = prid_ths;
         rand_pop(1) = [];
     end
-    
+
     % Determine Pride Gender Sizes
     prid_gln = length(prid_grp);
     prid_fml = round(prid_gln*percent_sex);
     prid_fin = randperm(prid_gln, prid_fml);
-    
+
     % Divide Pride Population to Male and Female to their placeholder
     prid_fgr = Lion.empty(0, prid_fml);
     for j=1:prid_fml
@@ -139,7 +144,7 @@ for i=1:prid_end
     prid_thg.type = 'p';
     prid_thg.females = prid_fgr;
     prid_thg.males = prid_grp;
-    
+
     % Configure Pride
 	prid_thg.maxsize = length(prid_thg.all_lions());
     prid_thg.configure();
@@ -172,7 +177,7 @@ if graph_function
             graph_function = false;
         end
     end
-    
+
     if ~print_lions && graph_function
         if print_graphics
             print(['loa-graph.png'], '-dpng');
@@ -241,7 +246,7 @@ if print_statistics
     fprintf(file_id, 'Near To Best Random Pressure: %g\n\n', nearness_pressure);
     fprintf(file_id, 'Dimensions: %g\n', dimension);
     fprintf(file_id, 'N-Dimension Space: %g:%g\n', space_min, space_max);
-    fprintf(file_id, '\nFitness Iterations:\n%g', global_best_fitness);
+    fprintf(file_id, '\nFitness Iterations:\n%g (Initial Best)\n', global_best_fitness);
 end
 
 % -----------------------
@@ -266,8 +271,8 @@ for i=1:iterations
 
     nomad_group.recount();
     nomad_group.do_nomad_all(space_min, space_max, adapt_fun, global_best, nearness_pressure);
-	nomad_group.mate(mating_rate,mutation_prob,space_min,space_max,adapt_fun,selection_pressure);
-	nomad_group.invade(pride_groups);
+  	nomad_group.mate(mating_rate,mutation_prob,space_min,space_max,adapt_fun,selection_pressure);
+  	nomad_group.invade(pride_groups);
 
     for j=1:prides_length
 		iter_gpr = pride_groups(j);
@@ -291,7 +296,16 @@ for i=1:iterations
     end
 
     if print_statistics
-        fprintf(file_id, '\n%g', global_best_fitness);
+        if print_all_fitness
+          fprintf(file_id, '\n');
+          for j=1:prides_length
+            fprintf(file_id, '%g, ', pride_groups(j).fitnesses() );
+          end
+          fprintf(file_id, '%g, ', nomad_group.fitnesses() );
+          fprintf(file_id, '\n' );
+        else
+          fprintf(file_id, '\n%g', global_best_fitness);
+        end
     end
 
     if print_lions
@@ -307,7 +321,7 @@ for i=1:iterations
         end
         nomad_group.print();
         fprintf('-- Nomads : %d + %d\n', length(nomad_group.males), length(nomad_group.females));
-        
+
         fprintf('- Best Fitness: %g\n', global_best_fitness);
 
         if graph_function
@@ -329,10 +343,18 @@ for i=1:iterations
 end
 
 if print_statistics
-    fprintf(file_id, '\nBest:\n');
-    fprintf(file_id, '%g\t', global_best);
-    fprintf(file_id, '\n');
+    fprintf(file_id, '\nBest:\n(');
+    fprintf(file_id, '%g, ', global_best);
+    fprintf(file_id, ')\n');
     fprintf(file_id, '\nFitness Evaluations:\n%g\n', adapt_fun.fitness_count);
+
+    if print_end_population
+      fprintf(file_id, '\nEnd Population\n');
+      for i=1:prides_length
+        fprintf(file_id, '(%s), ', [pride_groups(i).all_lions().pbest] );
+      end
+      fprintf(file_id, '(%s), ', [nomad_group.all_lions().pbest] );
+    end
     fclose(file_id);
 end
 

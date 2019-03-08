@@ -1,0 +1,229 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Beamer Presentation
+% LaTeX Template
+% Version 1.0 (10/11/12)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND THEMES
+%----------------------------------------------------------------------------------------
+
+\documentclass[xcolor=table]{beamer}
+
+\mode<presentation> {
+
+% The Beamer class comes with a number of default slide themes
+% which change the colors and layouts of slides. Below this is a list
+% of all the themes, uncomment each in turn to see what they look like.
+
+%\usetheme{default}
+%\usetheme{AnnArbor}
+%\usetheme{Antibes}
+%\usetheme{Bergen}
+%\usetheme{Berkeley}
+%\usetheme{Berlin}
+%\usetheme{Boadilla}
+%\usetheme{CambridgeUS}
+%\usetheme{Copenhagen}
+%\usetheme{Darmstadt}
+%\usetheme{Dresden}
+%\usetheme{Frankfurt}
+%\usetheme{Goettingen}
+%\usetheme{Hannover}
+%\usetheme{Ilmenau}
+%\usetheme{JuanLesPins}
+%\usetheme{Luebeck}
+\usetheme{Madrid}
+%\usetheme{Malmoe}
+%\usetheme{Marburg}
+%\usetheme{Montpellier}
+%\usetheme{PaloAlto}
+%\usetheme{Pittsburgh}
+%\usetheme{Rochester}
+%\usetheme{Singapore}
+%\usetheme{Szeged}
+%\usetheme{Warsaw}
+
+% As well as themes, the Beamer class has a number of color themes
+% for any slide theme. Uncomment each of these in turn to see how it
+% changes the colors of your current slide theme.
+
+%\usecolortheme{albatross}
+%\usecolortheme{beaver}
+%\usecolortheme{beetle}
+%\usecolortheme{crane}
+%\usecolortheme{dolphin}
+%\usecolortheme{dove}
+%\usecolortheme{fly}
+%\usecolortheme{lily}
+%\usecolortheme{orchid}
+%\usecolortheme{rose}
+%\usecolortheme{seagull}
+%\usecolortheme{seahorse}
+%\usecolortheme{whale}
+%\usecolortheme{wolverine}
+
+%\setbeamertemplate{footline} % To remove the footer line in all slides uncomment this line
+%\setbeamertemplate{footline}[page number] % To replace the footer line in all slides with a simple slide count uncomment this line
+
+%\setbeamertemplate{navigation symbols}{} % To remove the navigation symbols from the bottom of all slides uncomment this line
+}
+
+\usepackage{graphicx} % Allows including images
+
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\title[Improvement on LOA]{Improvement on Lion Optimization Algorithm (LOA)} % The short title appears at the bottom of every slide, the full title is only on the title page
+\author[Deo Fetalvero]
+{%
+   \texorpdfstring{
+     \centering
+     Deo Franc M. Fetalvero\\
+     \href{mailto:dmfetalvero@up.edu.ph}{dmfetalvero@up.edu.ph}
+   }
+   {Deo Fetalvero}
+}
+\date{\today} % Date, can be changed to a custom date
+
+\begin{document}
+
+\begin{frame}
+\titlepage % Print the title page as the first slide
+\end{frame}
+
+% \begin{frame}
+% \frametitle{Overview} % Table of contents slide, comment this block out to remove it
+% \tableofcontents % Throughout your presentation, if you choose to use \section{} and \subsection{} commands, these will automatically be printed on this slide as an overview of your presentation
+% \end{frame}
+
+\section{Introduction}
+
+\begin{frame}{Introduction}
+\par Lion Optimization Algorithm is one of the many algorithms that tackles on optimization. The main feature of the Lion Optimization Algorithm is its degree of adaptability tightly coupled on the parameters used.
+\vspace{0.2in}
+\par An improvement is made to extend the functionality of the Lion Optimization Algorithm. The improvement utilizes more information that is generated within the algorithm to further improve on its functionality.
+\end{frame}
+
+\section{Improvements}
+
+\begin{frame}{Improvements}
+\par The following is a list of improvements made on the algorithm:
+  \begin{itemize}
+    \item Group Direction in Prides
+    \item Fitness Weighted Mating
+    \item Simulated Annealing in Nomads
+    \item Order Pressured Random Selection
+    \item Center Pressured Randomization
+  \end{itemize}
+\end{frame}
+
+\section{Testing}
+\subsection{Rastrigin}
+\begin{frame}{Testing: Rastrigin}
+  Using the following function and parameters, results are made and shown in the table.
+  $$
+    f(x) = 10 + x_1^2 - 10 \cos(2\pi x_1)
+  $$
+  \begin{align*}
+    &\text{\scriptsize
+      Max Iter. = 50; Population = 50; Space = [-5, 5]; Prides = 4;  \% Nomad = 0.2;
+    }\\
+    &\text{\scriptsize
+      \% Sex = 0.8; \% Roaming = 0.2; \% Mating = 0.2; \% Mutate = 0.2; \% Immigration = 0.8;
+    }\\
+    &\text{\scriptsize
+       \% Group Influence = 0.4; Annealing: True; Order Pres. = 2; Center Pres. = 2;
+    }
+  \end{align*}
+  \begin{table}[]
+    \small
+  \begin{tabular}{l|l|l|l|}
+  \cline{2-4}
+                                                  & \textbf{(Old) Run 1} & \textbf{(Old) Run 2} & \textbf{(Old) Run 3} \\ \hline
+  \multicolumn{1}{|l|}{\textbf{End Fitness}}      & 1.62623e-07          & 1.14059e-07          & 4.26805e-11          \\ \hline
+  \multicolumn{1}{|l|}{\textbf{Best Lion}}        & -2.86305e-05         & -2.39775e-05         & -4.63826e-07         \\ \hline
+  \multicolumn{1}{|l|}{\textbf{Fun. Evaluations}} & 3277                 & 3481                 & 3429                 \\ \hline
+                                                  & \textbf{(New) Run 4} & \textbf{(New) Run 5} & \textbf{(New) Run 6} \\ \hline
+  \multicolumn{1}{|l|}{\textbf{End Fitness}}      & 3.28999e-11          & 2.8102e-12           & 7.47846e-13          \\ \hline
+  \multicolumn{1}{|l|}{\textbf{Best Lion}}        & -4.07233e-07         & 1.19016e-07          & -6.13836e-08         \\ \hline
+  \multicolumn{1}{|l|}{\textbf{Fun. Evaluations}} & 2804                 & 2665                 & 2809                 \\ \hline
+  \end{tabular}
+  \end{table}
+\end{frame}
+
+\subsection{Rosenbrock}
+\begin{frame}{Testing: Rosenbrock}
+  Using the following function and parameters, results are made and shown in the table.
+  $$
+    f(x) = (1-x_1)^2+100(x_2-x_1^2)^2
+  $$
+  \begin{align*}
+    &\text{\scriptsize
+      Max Iter. = 50; Population = 50; Space = [-5, 5]; Prides = 4;  \% Nomad = 0.2;
+    }\\
+    &\text{\scriptsize
+      \% Sex = 0.8; \% Roaming = 0.2; \% Mating = 0.2; \% Mutate = 0.2; \% Immigration = 0.8;
+    }\\
+    &\text{\scriptsize
+       \% Group Influence = 0.4; Annealing: True; Order Pres. = 2; Center Pres. = 2;
+    }
+  \end{align*}
+  \begin{table}[]
+    \small
+  \begin{tabular}{l|l|l|l|}
+  \cline{2-4}
+                                                  & \textbf{(Old) Run 1} & \textbf{(Old) Run 2} & \textbf{(Old) Run 3} \\ \hline
+  \multicolumn{1}{|l|}{\textbf{End Fitness}}      & 0.00193738           & 0.0103586            & 0.0295752            \\ \hline
+  \multicolumn{1}{|l|}{\textbf{Best Lion}}        & 1.04206, 1.08718     & 1.05594,	1.12351     & 0.912438, 0.817742   \\ \hline
+  \multicolumn{1}{|l|}{\textbf{Fun. Evaluations}} & 3297                 & 3310                 & 3391                 \\ \hline
+                                                  & \textbf{(New) Run 4} & \textbf{(New) Run 5} & \textbf{(New) Run 6} \\ \hline
+  \multicolumn{1}{|l|}{\textbf{End Fitness}}      & 0.00443017           & 5.42547e-05          & 2.18533e-05          \\ \hline
+  \multicolumn{1}{|l|}{\textbf{Best Lion}}        & 1.06647, 1.1377      & 0.99285, 0.985929    & 0.997266, 0.994918   \\ \hline
+  \multicolumn{1}{|l|}{\textbf{Fun. Evaluations}} & 2788                 & 2836                 & 2891                 \\ \hline
+  \end{tabular}
+  \end{table}
+\end{frame}
+\subsection{Griewank}
+\begin{frame}{Testing: Griewank}
+  Using the following function and parameters, results are made and shown in the table.
+  $$
+    f(x) = 1 + \frac{1}{4000}x_1^2 - \cos(x_1)
+  $$
+  \begin{align*}
+    &\text{\scriptsize
+      Max Iter. = 50; Population = 50; Space = [-100, 100]; Prides = 4;  \% Nomad = 0.2;
+    }\\
+    &\text{\scriptsize
+      \% Sex = 0.8; \% Roaming = 0.2; \% Mating = 0.2; \% Mutate = 0.2; \% Immigration = 0.8;
+    }\\
+    &\text{\scriptsize
+       \% Group Influence = 0.4; Annealing: True; Order Pres. = 2; Center Pres. = 2;
+    }
+  \end{align*}
+  \begin{table}[]
+    \small
+  \begin{tabular}{l|l|l|l|}
+  \cline{2-4}
+                                                  & \textbf{(Old) Run 1} & \textbf{(Old) Run 2} & \textbf{(Old) Run 3} \\ \hline
+  \multicolumn{1}{|l|}{\textbf{End Fitness}}      & 4.22439e-07           & 1.19733e-05            & 2.15247e-08            \\ \hline
+  \multicolumn{1}{|l|}{\textbf{Best Lion}}        & -0.000918943     & -0.00489231     & -0.000207432   \\ \hline
+  \multicolumn{1}{|l|}{\textbf{Fun. Evaluations}} & 3421                 & 3516                 & 3512                 \\ \hline
+                                                  & \textbf{(New) Run 4} & \textbf{(New) Run 5} & \textbf{(New) Run 6} \\ \hline
+  \multicolumn{1}{|l|}{\textbf{End Fitness}}      & 8.27745e-09           & 8.28981e-12          & 1.84039e-11          \\ \hline
+  \multicolumn{1}{|l|}{\textbf{Best Lion}}        & -0.000128634      & 4.07076e-06    & -6.06545e-06   \\ \hline
+  \multicolumn{1}{|l|}{\textbf{Fun. Evaluations}} & 2919                 & 2833                 & 2623                 \\ \hline
+  \end{tabular}
+  \end{table}
+\end{frame}
+
+\end{document}

@@ -5,7 +5,7 @@ D=1;
 Xmin=-100;
 Xmax=100;
 pop_size=50;
-iter_max=50;
+iter_max=300;
 fhd = @fit_fun;
 
 [gbest,gbestval,FES] = LOA_func(fhd,D,pop_size,iter_max,Xmin,Xmax,func_num)
@@ -14,7 +14,7 @@ fhd = @fit_fun;
 %     fitness = (pos(1)*pi/100)^2;
 % end
 
-% RASTRIGIN (0, 0) minima
+% RASTRIGIN (0, 0) minima n(5) [0,50]
 % function fitness = fit_fun(pos, n)
 %     dimensions = length(pos);
 %     fitness = 10*dimensions;
@@ -24,7 +24,7 @@ fhd = @fit_fun;
 %     end
 % end
 
-% ROSENBROCK2d (0, 0) minima
+% ROSENBROCK2d (0, 0) minima n(5) [0,10000]
 % function fitness = fit_fun(pos, n)
 %     fitness = (1-pos(1))^2 + 100*(pos(2) - pos(1)^2)^2;
 % end
@@ -37,7 +37,7 @@ fhd = @fit_fun;
 %     end
 % end
 
-% Griewank 1d
+% Griewank 1d n(100) [0,5]
 function fitness = fit_fun(pos, n)
     fitness = 1 + (1/4000)*pos(1)^2-cos(pos(1));
 end
