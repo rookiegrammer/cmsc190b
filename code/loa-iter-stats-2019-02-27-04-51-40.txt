@@ -1,0 +1,25 @@
+Iterations: 50
+Function Evaluations Limit: 150000
+Population: 50
+
+Prides Length: 4
+
+Percent Nomads: 0.2
+Percent Roaming: 0.2
+Percent Sex: 0.8
+
+Mating Rate: 0.3
+Mutation Probability: 0.2
+Immigration Rate: 0.4
+
+Percent Group Influence: 0.4
+Annealing On: true
+Ranked Selection Pressure: 2
+Near To Best Random Pressure: 2
+
+Dimensions: 1
+N-Dimension Space: -5:5
+
+Fitness Iterations:
+0.000296069
+0.000296069
