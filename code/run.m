@@ -2,13 +2,20 @@ close all
 
 func_num=0;
 D=1;
-Xmin=-100;
-Xmax=100;
+Xmin=-5;
+Xmax=5;
 pop_size=50;
-iter_max=300;
+iter_max=50;
 fhd = @fit_fun;
 
-[gbest,gbestval,FES] = LOA_func(fhd,D,pop_size,iter_max,Xmin,Xmax,func_num)
+rand_lio = rand(D, pop_size).*(Xmax-Xmin)+Xmin;
+
+cur_date = datetime;
+cur_date.Format = 'uuuu-MM-dd-HH-mm-ss';
+cur_date = char(cur_date);
+
+[gbest,gbestval,FES] = LOA_func(fhd,D,pop_size,iter_max,Xmin,Xmax,rand_lio,cur_date,func_num)
+[gbest2,gbestval2,FES2] = iLOA_func(fhd,D,pop_size,iter_max,Xmin,Xmax,rand_lio,cur_date,func_num)
 
 % function fitness = fit_fun(pos, n)
 %     fitness = (pos(1)*pi/100)^2;
@@ -29,18 +36,18 @@ fhd = @fit_fun;
 %     fitness = (1-pos(1))^2 + 100*(pos(2) - pos(1)^2)^2;
 % end
 
-% function fitness = fit_fun(pos, n)
-%     dimensions = length(pos);
-%     fitness = 0;
-%     for i=1:dimensions
-%         fitness = fitness + pos(i)^2;
-%     end
-% end
+function fitness = fit_fun(pos, n)
+    dimensions = length(pos);
+    fitness = 0;
+    for i=1:dimensions
+        fitness = fitness + pos(i)^2;
+    end
+end
 
 % Griewank 1d n(100) [0,5]
-function fitness = fit_fun(pos, n)
-    fitness = 1 + (1/4000)*pos(1)^2-cos(pos(1));
-end
+% function fitness = fit_fun(pos, n)
+%     fitness = 1 + (1/4000)*pos(1)^2-cos(pos(1));
+% end
 
 % Griewank 2d
 % function fitness = fit_fun(pos, n)

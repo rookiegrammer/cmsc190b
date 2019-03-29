@@ -1,4 +1,4 @@
-\section{Center Based Per Axis Randomization}
+\subsection{Center Based Per Axis Randomization}
 \par Generating new points can be improved by randomizing based on a central point in the search space. Points far from the center point should be generated at lesser quantities and points near the center should be generated at greater quantities. \textbf{This section focuses on a new center based randomization method that improves finding more points that are either near or far a ``hotspot'' or a central point \cite{strategy}.}
 
 \par In the algorithm, nomads either stay in their positions doing nothing or reset to a new position in every iteration. This can be improved by introducing a new randomization method that can randomize a new position based on the previous position. In this improvement, Nomad lions either roam around a place to ``stay'' or find a new place.
@@ -26,3 +26,46 @@ where LB is the lower bound or the ``minimum'' of the search space, UB is the up
 \end{figure}
 
 \par The points that are near to the axis of the center point are more likely to be generated than those that are far from the center point when the `deg' is greater than 1. When `deg' is less than 1, points far from the center point are generated more while when `deg' is 1, it is generating a uniform random number only.
+
+\par The following figure shows generating random points using the mentioned technique with different centers and degree of nearness.
+
+\begin{figure}
+  \centering
+  \begin{subfigure}[b]{0.4\textwidth}
+    \includegraphics[width=\textwidth]{img/cbr-0}
+    \label{fig:cbr-0}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.4\textwidth}
+    \includegraphics[width=\textwidth]{img/cbr-1}
+    \label{fig:cbr-1}
+  \end{subfigure}
+
+  \begin{subfigure}[b]{0.4\textwidth}
+    \includegraphics[width=\textwidth]{img/cbr-2}
+    \label{fig:cbr-2}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.4\textwidth}
+    \includegraphics[width=\textwidth]{img/cbr-3}
+    \label{fig:cbr-3}
+  \end{subfigure}
+
+  \begin{subfigure}[b]{0.4\textwidth}
+    \includegraphics[width=\textwidth]{img/cbr-4}
+    \label{fig:cbr-4}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.4\textwidth}
+    \includegraphics[width=\textwidth]{img/cbr-5}
+    \label{fig:cbr-5}
+  \end{subfigure}
+
+  \begin{subfigure}[b]{0.4\textwidth}
+    \includegraphics[width=\textwidth]{img/cbr-6}
+    \label{fig:cbr-6}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.4\textwidth}
+    \includegraphics[width=\textwidth]{img/cbr-7}
+    \label{fig:cbr-7}
+  \end{subfigure}
+
+  \caption{Center Based Random Points with Varying Centers and Nearness}
+\end{figure}

@@ -1,0 +1,45 @@
+\section{Modified Program Flow for the New Algorithm}
+
+Combining together every improvement to the Lion Optimization Algorithm, the new flow of the new algorithm, that can be now called as the Improved Lion Optimization Algorithm (iLOA), is as follows:
+
+\fbox{\begin{minipage}{0.9\textwidth}
+\scriptsize
+
+\textbf{Improved Lion Optimization Algorithm pseudo code}
+
+\begin{enumerate}
+  \item Generate random sample of Lions N$_{pop}$(N$_{pop}$ is number of initial population).
+  \item Initiate prides and nomad lions
+    \begin{itemize}
+      \item Randomly select \%N (Percent of lions that are nomad) of initial population as nomad lion. Partition remained lions into P (P is number of prides) prides randomly, and formed each pride’s territory.
+      \item In each pride \%S (Sex rate) of entire population are known as females and the rest as males. This rate in nomad lions is inversed.
+    \end{itemize}
+  \item For each pride do
+    \begin{itemize}
+      \item Some randomly selected female lion go hunting.
+      \item Each of remained female lion in pride go toward one place in the territory selected randomly but with bias to the better places (Ranked Selection Random). The direction of each female would be influenced by the direction to the best place in the territory by \%I (Group Influence)
+      \item In pride, for each resident male; \%R (Roaming percent) of territory randomly are selected with bias to the better places (Ranked Selection Random) and then checked with the influence of the best place in the territory by \%I (Group Influence).
+      \item \%Ma (Mating probability) of females with bias to the best females (Ranked Selection Random) in pride mate with one or several resident male. The stronger the male lion’s gene, the better it influences the offspring (Fitness Weighted Mating). — New cubs become mature.
+      \item Weakest male drive out from pride and checked whether it is within the lower bound fitness of nomads.
+      \begin{itemize}
+        \item Joins nomads, otherwise, killed (Simulated Annealing)
+      \end{itemize}
+    \end{itemize}
+  \item For Nomad do
+    \begin{itemize}
+      \item Nomad lion (both male and female) moving randomly in search space. Every random is centered on the best nomad lion in the group and biased near it (Center Based Randomization).
+      \item \%Ma (Mating probability) of nomad Female mate with one of the best nomad male. — New cubs become mature.
+      \item Prides randomly attacked by nomad male.
+    \end{itemize}
+  \item For each pride do
+    \begin{itemize}
+      \item Some female with I rate ((Immigrate rate)) immigrate from pride and become nomad.
+    \end{itemize}
+  \item Do
+    \begin{itemize}
+      \item First, based on their fitness value each gender of the nomad lions are sorted. After that, the best females among them are selected and distributed to prides filling empty places of migrated females.
+      \item With respect to the maximum permitted number of each gender, nomad lions with the least fitness value will be removed.
+    \end{itemize}
+\end{enumerate}
+If termination criterion is not satisfied, then go to step c
+\end{minipage}}

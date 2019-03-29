@@ -27,24 +27,7 @@ classdef Lion < handle
             o1 = Lion;
             o2 = Lion;
             
-            msum = 0;
-            mlength = length(males);
-            
-            if mlength > 0
-                mdenom = 0;
-                for i=1:mlength
-                    malepos = males(i).pbest;
-                    cmpfit = me.pbestval-males(i).pbestval;
-                    if cmpfit ~= 0
-                        msum = msum + malepos / cmpfit;
-                        mdenom = mdenom + 1 / cmpfit;
-                    end 
-                end
-                msum = msum/mdenom;
-            else
-                msum = males.position;
-            end
-            
+            msum = mean([males.position], 2);
             mbeta = 1-beta;
             
             o1.position = beta.*me.position + mbeta .* msum;
@@ -77,28 +60,15 @@ classdef Lion < handle
             
         end
         
-        function go_toward(me,other, lbest, grp_inf)
+        function go_toward(me,other)
             if me.position == other.position
                 return % no change
             end
             mypos = me.position;
             direction = (other.pbest - mypos); % direction vector times D distance between best and source
-            
-            dirlength = norm(direction);
-            direction = direction/dirlength;
-            
-            dirinfluence = (lbest - mypos);
-            
-            if dirinfluence ~= 0
-                dirinfluence = dirinfluence/norm(dirinfluence);
-                direction = direction.*(1-grp_inf)+dirinfluence.*grp_inf;
-            end
-            
             random = rand();
-            
-            mypos = mypos + 2 * random * direction * dirlength; % push lion to direction, part 1
-            
-            normals = null(direction(:).').*dirlength; % get all vectors normal to direction vector
+            mypos = mypos + 2 * random * direction; % push lion to direction, part 1
+            normals = null(direction(:).').*norm(direction); % get all vectors normal to direction vector
             deviate = random * pi / 6; % extent to which the point can deviate from the direction
             for z = 1:size(normals, 2) % for all 'dimensions' or direction the point can deviate from, part 2
                 mypos = mypos + normals(:,z) .* deviate * (rand() * 2 - 1); % deviate point in direction perpendicular to original direction
@@ -126,16 +96,6 @@ classdef Lion < handle
                 me.pbestval = newbestval;
                 did_update = true;
             end
-        end
-        
-        function random_value(me, center, space_min, space_max, nearness_pressure)
-            rand_arr = rand(length(center),1).*2-1;
-            
-            rand_min = abs(min(rand_arr, 0)).^nearness_pressure;
-            rand_max = max(rand_arr, 0).^nearness_pressure;
-            
-            me.position = center - (center - space_min) .* rand_min + (-center + space_max) .* rand_max;
-            
         end
         
         function print(me, style)

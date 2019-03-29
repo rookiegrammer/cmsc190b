@@ -5,11 +5,6 @@ classdef Group < handle
         lbest % local best
         lbestval % local best value
 
-        lworstval
-        lcurworstval = -Inf;
-
-        anneal = false;
-
         males = [];
         females = [];
 
@@ -24,10 +19,6 @@ classdef Group < handle
 
         function recount(me)
             me.improved = 0;
-            if me.anneal
-                me.lworstval = me.lcurworstval;
-                me.lcurworstval = -Inf;
-            end
         end
 
         function configure(me)
@@ -39,15 +30,9 @@ classdef Group < handle
                     me.lbest = lion_ith.pbest;
                     me.lbestval = lion_ith.pbestval;
                 end
-                if me.anneal && lion_ith.pbestval > me.lcurworstval
-                    me.lcurworstval = lion_ith.pbestval;
-                end
-            end
-            if me.anneal
-                me.lworstval = me.lcurworstval;
             end
         end
-
+        
         function force_get_best(me)
             lions = me.all_lions();
             pbestval = me.lbestval;
@@ -61,16 +46,17 @@ classdef Group < handle
             me.lbestval = pbestval;
         end
 
-        function do_pride_fem(me, roam_per, min_val, max_val, fit_fun, grp_inf, sel_press)
+        function do_pride_fem(me, roam_per, min_val, max_val, fit_fun)
                 fem_len = length(me.females);
-
+                
                 if fem_len == 0
                     return
                 end
-
+                
+                
                 roam_len = floor(roam_per * fem_len);
                 roam_ind = randperm(fem_len, roam_len);
-
+                
                 hunt_dim = length(me.females(1).position);
                 hunt_ers = me.females;
                 hunt_ers( roam_ind ) = [];
@@ -84,7 +70,7 @@ classdef Group < handle
                 end
 
                 hunt_pry = min_val + rand(hunt_dim,1)*(max_val-min_val);
-
+                
                 for i=1:hunt_len
                     hunt_cli = hunt_ers(i);
                     hunt_rnd = rand();
@@ -105,33 +91,35 @@ classdef Group < handle
                         hunt_pry = hunt_pry + hunt_prn .* hunt_pim .* (hunt_pry - hunt_cli.position);
                         me.improved = me.improved + 1;
 
-                        me.update_best(hunt_cli);
+                        if hunt_cli.pbestval < me.lbestval
+                            me.lbest = hunt_cli.pbest;
+                            me.lbestval = hunt_cli.pbestval;
+                        end
                     end
                 end
-
+                
                 roam_all = me.all_lions();
-                [~, roam_srt] = sort([roam_all.pbestval]);
-                roam_all = roam_all(roam_srt);
-
                 roam_tsiz = max(2, ceil(me.improved/2));
-
                 for i=1:length(roam_ind)
                     roam_cli = me.females(roam_ind(i));
-                    roam_tin = randk(length(roam_all), roam_tsiz, sel_press);
+                    roam_tin = randperm(length(roam_all), roam_tsiz);
                     roam_tim = false;
                     for j=1:roam_tsiz
                         roam_oth = roam_all(roam_tin(j));
-
+                        
                         roam_clf = roam_cli.pbestval;
-
-                        roam_cli.go_toward(roam_oth, me.lbest, grp_inf);
+                        
+                        roam_cli.go_toward(roam_oth);
                         roam_cli.evaluate(fit_fun, min_val, max_val);
-
+                        
                         if roam_cli.pbestval < roam_clf
                             roam_tim = true;
-                            me.update_best(roam_cli);
+                            if roam_cli.pbestval < me.lbestval
+                                me.lbest = roam_cli.pbest;
+                                me.lbestval = roam_cli.pbestval;
+                            end
                         end
-                    end
+                    end 
                     roam_cli.position = roam_cli.pbest;
                     if roam_tim
                         me.improved = me.improved + 1;
@@ -139,31 +127,31 @@ classdef Group < handle
                 end
         end
 
-        function do_pride_mal(me, roam_per, fit_fun, min_val, max_val, grp_inf, sel_press)
+        function do_pride_mal(me, roam_per, fit_fun, min_val, max_val)
             male_len = length(me.males);
 
             roam_all = me.all_lions();
-            [~, roam_srt] = sort([roam_all.pbestval]);
-            roam_all = roam_all(roam_srt);
-
             roam_len = ceil(roam_per * male_len);
 
             if roam_len > 0
                 for i=1:male_len
                     roam_cli = me.males(i);
-                    roam_tin = randk(length(roam_all), roam_len, sel_press);
+                    roam_tin = randperm(length(roam_all), roam_len);
                     roam_tim = false;
                     for j=1:roam_len
                         roam_oth = roam_all(roam_tin(j));
-
+                        
                         roam_clf = roam_cli.pbestval;
-
-                        roam_cli.go_toward(roam_oth, me.lbest, grp_inf);
+                        
+                        roam_cli.go_toward(roam_oth);
                         roam_cli.evaluate(fit_fun, min_val, max_val);
-
+                        
                         if roam_cli.pbestval < roam_clf
                             roam_tim = true;
-                            me.update_best(roam_cli);
+                            if roam_cli.pbestval < me.lbestval
+                                me.lbest = roam_cli.pbest;
+                                me.lbestval = roam_cli.pbestval;
+                            end
                         end
                     end
                     roam_cli.position = roam_cli.pbest;
@@ -174,22 +162,27 @@ classdef Group < handle
             end
         end
 
-        function do_nomad_all(me, min_val, max_val, fit_fun, g_best, near_press)
+        function do_nomad_all(me, min_val, max_val, fit_fun)
             nomd_all = me.all_lions();
             nomd_len = length(nomd_all);
             nomd_bft = me.lbestval;
             for i=1:nomd_len
                 nomd_cli = nomd_all(i);
                 nomd_lft = nomd_cli.pbestval;
+                nomd_dim = length(nomd_cli.pbest);
                 nomd_imp = (nomd_lft - nomd_bft) / nomd_bft;
                 nomd_prb = 0.1 + min(0.5, nomd_imp);
 
                 if rand() <= nomd_prb
-                    nomd_cli.random_value(g_best, min_val, max_val, near_press);
+                    nomd_cli.position = min_val + rand(nomd_dim,1)*(max_val-min_val);
                     nomd_cli.evaluate(fit_fun, min_val, max_val);
-                    if nomd_cli.pbestval < nomd_lft
+                    nomd_nft = nomd_cli.pbestval;
+                    if nomd_nft < nomd_lft
                         me.improved = me.improved + 1;
-                        me.update_best(nomd_cli);
+                        if nomd_nft < nomd_bft
+                            me.lbestval = nomd_nft;
+                            me.lbest = nomd_cli.pbest;
+                        end
                     end
                 end
             end
@@ -208,20 +201,16 @@ classdef Group < handle
                         success = false;
 						for k=1:length(ipride.males)
 							rm = ipride.males(k); % resident male
-							if rm.pbestval > nm.pbestval % true if nomad male is stronger than resident
+							if rm.pbestval>nm.pbestval % true if nomad male is stronger than resident
 								% switch places of resident and nomad
 								ipride.males(k) = nm;
-                                ipride.update_best(nm);
-
 								me.males(i) = rm;
-                                me.update_best(rm);
-
                                 success = true;
 								break;
 							end
                         end
                         if success
-                            break; % the nomad has invaded one pride now we escape
+                            break;
                         end
 					end
 				end
@@ -241,23 +230,17 @@ classdef Group < handle
 
 			imifem = randperm(length(me.females),mifem); %indices of migrating females
 
-            nomad_grp.add_new(me.females(imifem)); % get migrating...
+            nomad_grp.females = [nomad_grp.females me.females(imifem)]; % get migrating...
 
             me.females(imifem)=[]; % remove them here
 		end
 
-		function mate(me,mating_rate,mutation_prob,space_min,space_max,fit_fun, sel_press)
+		function mate(me,mating_rate,mutation_prob,space_min,space_max,fit_fun)
             tgrp_mln = length(me.males);
             tgrp_fln = length(me.females);
 
-            [~, ind] = sort([me.females.pbestval]);
-            me.females = me.females(ind);
-
-            [~, ind] = sort([me.males.pbestval]);
-            me.males = me.males(ind);
-
 			fheat = fix(mating_rate * tgrp_fln);% number of females in heat
-			ifheat = randk(tgrp_fln, fheat, sel_press); % indices of females in heat
+			ifheat = randperm(tgrp_fln, fheat); % indices of females in heat
 
             tgrp_typ = me.type;
             tgrp_mht = randi(tgrp_mln); % index/number of male/s in heat
@@ -268,11 +251,10 @@ classdef Group < handle
             for i=1:fheat
                 tgrp_fem = me.females(ifheat(i));
                 if tgrp_typ == 'p'
-                    imheat = randk(tgrp_mln,tgrp_mht, sel_press); % indices of males in heat
+                    imheat = randperm(tgrp_mln,tgrp_mht); % indices of males in heat
                     mheat = me.males(imheat);
                     offsprings = tgrp_fem.mate(mheat, mutation_prob, space_min, space_max); % mate
                 else
-                    tgrp_mht = randk(tgrp_mln, 1, sel_press);
                     offsprings = tgrp_fem.mate(me.males(tgrp_mht), mutation_prob, space_min, space_max);
                 end
 
@@ -280,13 +262,22 @@ classdef Group < handle
 				offsprings(1).init(offsprings(1).position,fit_fun);
                 offsprings(2).init(offsprings(2).position,fit_fun);
 
+                if offsprings(1).pbestval < me.lbestval
+                    me.lbest = offsprings(1).pbest;
+                    me.lbestval = offsprings(1).pbestval;
+                end
+                if offsprings(2).pbestval < me.lbestval
+                    me.lbest = offsprings(2).pbest;
+                    me.lbestval = offsprings(2).pbestval;
+                end
+
                 % index 1 is standard for the male
 				chld_m(i) = offsprings(1);
 				chld_f(i) = offsprings(2);
             end
 
-            me.add_new(chld_m);
-            me.add_new(chld_f);
+            me.males = [me.males chld_m];
+            me.females = [me.females chld_f];
         end
 
         function equilibriate(me,nomad_group,sex_rate)
@@ -297,7 +288,7 @@ classdef Group < handle
 				%sort males from weakest to strongest
 				[~, ind] = sort([me.males.pbestval],'descend');
                 out_indices = ind(1:todrout); % get first n indices of weakest
-                nomad_group.add_new(me.males(out_indices)); % add to nomad males with indices
+                nomad_group.males = [nomad_group.males me.males(out_indices)]; % add to nomad males with indices
                 me.males(out_indices) = []; % remove them here
             else
                 %kill the weak
@@ -336,14 +327,9 @@ classdef Group < handle
                 need_fem(i) = max(0, fix(sex_rate * pgrp.maxsize + 0.0001) - length(pgrp.females)); % do you need some?
             end
 
-            need_len = sum(need_fem);
-            if need_len > length(me.females)
-                return; % Don't take anymore if need is greater
-            end
 
-            ifem = randperm(need_len); % shuffle indices 1 to needed
+            ifem = randperm(sum(need_fem)); % shuffle indices 1 to needed
             j = 0;
-
 			% give each pride the strong ones
 			for i=1:prid_len
                 pgrp = pride_grps(i);
@@ -352,42 +338,13 @@ classdef Group < handle
                 k = j + many;
                 first_ind = ifem(j+1:k); % get next n indices
 
-                pgrp.add_new(me.females(first_ind)); % give it to the pride
+                pgrp.females = [pgrp.females me.females(first_ind)]; % give it to the pride
 
                 j = k;
             end
             me.females(ifem)=[]; % clear those at my indices
         end
-
-        function update_best(me, lion)
-            if lion.pbestval < me.lbestval
-                me.lbestval = lion.pbestval;
-                me.lbest = lion.pbest;
-            else
-                if me.anneal && lion.pbestval > me.lcurworstval
-                    me.lcurworstval = lion.pbestval;
-                end
-            end
-        end
-
-        function add_new(me, lions)
-            for i=1:length(lions)
-                lion = lions(i);
-                add = true;
-                if me.anneal && lion.pbestval > me.lworstval
-                    add = false;
-                end
-                if add
-                    if lion.sex == 'm'
-                        me.males = [me.males lion];
-                    else
-                        me.females = [me.females lion];
-                    end
-                    me.update_best(lion);
-                end
-            end
-        end
-
+        
         function array = fitnesses(me)
           lions = me.all_lions();
           array = [lions.pbestval];
@@ -411,6 +368,9 @@ classdef Group < handle
             for i=1:len_f
                 me.females(i).print(style);
             end
+
+%             fprintf('%i ', len_f+len_m);
+
         end
     end
 end

@@ -1,0 +1,17 @@
+classdef Function_Wrap
+    %FUNCTION_WRAP Summary of this class goes here
+    %   Detailed explanation goes here
+    
+    properties
+        function_argin
+        function_handle
+    end
+    
+    methods
+        function output = method1(obj, vector)
+            handle = me.function_handle;
+            output = feval(handle, vector);
+        end
+    end
+end
+
