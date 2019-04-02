@@ -232,13 +232,23 @@ classdef iGroup < handle
 		function emigrate(me,sex_rate,im_rate,nomad_grp)
 			if me.type == 'n'
 				return;
-			end
+            end
+            
+            femlen = length(me.females);
+            
+            if femlen == 0
+                return
+            end
 
 			maxfem = sex_rate*me.maxsize; %maximum females in this pride
 			imfem = fix(im_rate*maxfem); % immigrating females
 
-			mifem = fix(length(me.females)-maxfem + imfem);% number of migrating females (surplus + migrating)
-
+			mifem = fix(femlen-maxfem + imfem);% number of migrating females (surplus + migrating)
+            
+            if mifem == femlen
+                mifem = mifem - 1;% stop algorithm from disposing all females
+            end
+            
 			imifem = randperm(length(me.females),mifem); %indices of migrating females
 
             nomad_grp.add_new(me.females(imifem)); % get migrating...
@@ -249,6 +259,10 @@ classdef iGroup < handle
 		function mate(me,mating_rate,mutation_prob,space_min,space_max,fit_fun, sel_press)
             tgrp_mln = length(me.males);
             tgrp_fln = length(me.females);
+            
+            if tgrp_mln == 0 || tgrp_fln == 0
+                return
+            end
 
             [~, ind] = sort([me.females.pbestval]);
             me.females = me.females(ind);
@@ -258,7 +272,7 @@ classdef iGroup < handle
 
 			fheat = fix(mating_rate * tgrp_fln);% number of females in heat
 			ifheat = randk(tgrp_fln, fheat, sel_press); % indices of females in heat
-
+            
             tgrp_typ = me.type;
             tgrp_mht = randi(tgrp_mln); % index/number of male/s in heat
 

@@ -1,4 +1,4 @@
-function [gbest,gbestval,fitcount] = iLOA_func(fit_fun,dimension,population,iterations,space_min,space_max,generated,title,varargin)
+function [gbest,gbestval,fitcount] = iLOA_func(fit_fun,dimension,population,iterations,space_min,space_max,generated,title,setting,varargin)
 
 if ischar(title)
     cur_date = title;
@@ -19,9 +19,9 @@ view_3d_angle     = [-45 -45 90];
 graph_function = false;
 print_lions = false;
 print_graphics = false; % Save Iterations Images to File
-print_statistics = true; % Save Statistics per Iteration to file
-print_all_fitness = true;
-print_end_population = true;
+print_statistics = false; % Save Statistics per Iteration to file
+print_all_fitness = false;
+print_end_population = false;
 
 limit = 150000;
 
@@ -40,8 +40,24 @@ immigration_rate = 0.4;
 % ____NEW_PARAMETERS_____
 percent_influence = 0.4;
 do_annealing = true;
-selection_pressure = 2;
-nearness_pressure = 2;
+selection_pressure = 3;
+nearness_pressure = 3;
+
+
+
+if isobject(setting)
+    prides_length = setting.numberOfPrides;
+    percent_nomad = setting.percentNomad;
+    percent_roam = setting.percentRoam;
+    percent_sex = setting.percentSex;
+    mating_rate = setting.rateMating;
+    mutation_prob = setting.probabilityMutation;
+    immigration_rate = setting.rateImmigration;
+    percent_influence = setting.percentGroupInfluence;
+    do_annealing = setting.annealing;
+    selection_pressure = setting.pressureRankedSelect;
+    nearness_pressure = setting.pressureNearBest;
+end
 
 % -----------------------
 

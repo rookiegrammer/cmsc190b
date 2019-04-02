@@ -98,7 +98,13 @@ classdef iLion < handle
             
             mypos = mypos + 2 * random * direction * dirlength; % push lion to direction, part 1
             
-            normals = null(direction(:).').*dirlength; % get all vectors normal to direction vector
+            chkdir = direction(:).';
+            if any(isinf(chkdir)) || any(isnan(chkdir))
+                return
+            end
+            
+            normals = null(chkdir).*dirlength; % get all vectors normal to direction vector
+            
             deviate = random * pi / 6; % extent to which the point can deviate from the direction
             for z = 1:size(normals, 2) % for all 'dimensions' or direction the point can deviate from, part 2
                 mypos = mypos + normals(:,z) .* deviate * (rand() * 2 - 1); % deviate point in direction perpendicular to original direction
