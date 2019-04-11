@@ -62,7 +62,7 @@ parfor i=1:length(percentNomad)
                                     end
                                     runline = [cur_set.get_all() runline];
                                     count = count + 1;
-                                    dlmwrite(['out/paramtest-' cur_date '.csv'],runline,'-append','delimiter',',','roffset',0,'precision',10)
+                                    dlmwrite(['out/paramtest-' cur_date '.csv'],runline,'-append','delimiter',',','roffset',0,'precision',16)
                                     send(dataq,[i count]);
                                 end
                             end
@@ -87,12 +87,12 @@ end
 %     fitness = (pos(1)*pi/100)^2;
 % end
 
-% RASTRIGIN (0, 0) minima n(5) [0,50]
+% RASTRIGIN *10 (0, 0) minima n(5) [0,50]
 % function fitness = fit_fun(pos, n)
 %     dimensions = length(pos);
 %     fitness = 10*dimensions;
 %     for i=1:dimensions
-%         xi = pos(i);
+%         xi = pos(i)*10;
 %         fitness = fitness + xi ^ 2 - 10 * cos(2*pi*xi);
 %     end
 % end
@@ -110,13 +110,13 @@ end
 %     end
 % end
 
-% Griewank 1d n(100) [0,5]
+% Griewank 1d*10 n(100) [0,5]
 % function fitness = fit_fun(pos, n)
-%     fitness = 1 + (1/4000)*pos(1)^2-cos(pos(1));
+%     fitness = 1 + (1/4000)*pos(1)^2-cos(pos(1)*10);
 % end
 
 % Griewank 2d
-function fitness = fit_fun(pos, n)
-    fitness = 1 + (1/4000)*pos(1)^2 + (1/4000)*pos(2)^2-cos(pos(1)) * cos(sqrt(2)*pos(2)/2);
-end
+% function fitness = fit_fun(pos, n)
+%     fitness = 1 + (1/4000)*pos(1)^2 + (1/4000)*pos(2)^2-cos(pos(1)) * cos(sqrt(2)*pos(2)/2);
+% end
 

@@ -53,3 +53,8 @@ end
 % function fitness = fit_fun(pos, n)
 %     fitness = 1 + (1/4000)*pos(1)^2 + (1/4000)*pos(2)^2-cos(pos(1)) * cos(sqrt(2)*pos(2)/2);
 % end
+
+% Griewank 3d
+% function fitness = fit_fun(pos, n)
+%     fitness = 1 + (1/4000)*pos(1)^2 + (1/4000)*pos(2)^2 + (1/4000)*pos(3)^2 - cos(pos(1)) * cos(sqrt(2)*pos(2)/2) * cos(3^(1/3) * pos(3) / 3);
+% end
