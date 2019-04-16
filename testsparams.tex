@@ -1,0 +1,22 @@
+\section{Parameter Testing for iLOA}
+
+\par Parameter tests are done for each of the aforementioned functions by performing an exhaustive search on the following parameter points:
+
+percentNomad = [0.2 0.4 0.6 0.8];
+percentRoam = [0.2 0.4 0.6 0.8];
+percentSex = [0.2 0.4 0.6 0.8];
+rateMating = [0.3 0.6];
+probabilityMutation = [0.2 0.4 0.6 0.8];
+rateImmigration = [0.2 0.4 0.6 0.8];
+percentGroupInfluence = [0.2 0.4 0.6 0.8];
+pressureRankedSelect = [2 3];
+pressureNearBest = [2 3];
+
+\par Each of the functions is run using every possible set of parameters using the above parameter points and their outputs recorded so that the best parameter set is found.
+
+\par Each function is tested against iLOA with every parameter set running 5 times each for redundancy. The iterations are limited to 30, includes 4 prides and a population of 50 for the parameters.
+
+\subsection{Test Limitations}
+\par The platform used for both the algorithm code and parameter tester, MATLAB, has its own limitations of number representation when representing float values of numbers with decimal places with more than 16 binary digits (values smaller than $2^{-16}$). Now, all of one-dimensional Griewank, one-dimensional Rastrigin and two-dimensional Rastrigin has encountered this limitations such that some of their fitness data represented results being zero upon data collection.
+
+\par Instead of using the mentioned functions, the three-dimensional Griewank, three-dimensional Rastrigin and four-dimensional Rastrigin functions are used. These functions not only are similar to their replaced counterparts but have larger search space than their counterparts.
