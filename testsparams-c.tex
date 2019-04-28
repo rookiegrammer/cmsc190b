@@ -1,0 +1,23 @@
+\subsection{Parameter Testing Conclusion}
+\par There are different parameter sets that perform better for each function. This only implies that the No Free Lunch Theorem is at work. Having different parameter sets makes each instance of iLOA algorithm different from other instances with a different parameter set. Each function works best with a certain instance of iLOA with a certain parameter set.
+
+\par The previous test proves that smaller search spaces tends to have a higher randomability in its parameter set since smaller spaces are easy to scan through for the best points and that larger search spaces decrease its randomability since larger spaces are harder to scan through such that improving on the best solutions so far is more convenient.
+
+\par The parameter set also depends on how many optima that can be found from the functions. High count optima functions like Rastrigin tend to favor randomability more while low count optima functions like Rosenbrock tend to favor selection imrpovement more over randomability.
+
+\par Taking the most common best parameter points that were used by the functions, the most common parameter setup for iLOA is:
+
+\fbox{\begin{minipage}{0.9\textwidth}
+\scriptsize
+Nomad Percentage (\%N) = 0.2 (ave 0.24) \\
+Roaming Percentage (\%R) = 0.8 (ave 0.76) \\
+Sex Percentage (\%S) = 0.4 (ave 0.4) \\
+Mating Rate (\%Ma) = 0.5 (ave 0.54) \\
+Mutation Probability = 0.6 (ave 0.56) \\
+Immigration Rate = 0.6 (ave 0.64) \\
+Percent Group Influence = 0.6 (ave 0.64) \\
+Ranked Selection Pressure = 2 (ave 2.3) \\
+Near to Best Random Pressure = 3 (ave 2.8)
+\end{minipage}}
+
+\par Since most of the functions used in the tests is of type high count optima, the above parameter set is biased to high count optima functions.

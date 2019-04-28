@@ -2,12 +2,38 @@
 
 \subsection{Two-Dimensional Griewank}
 
-4.0000    0.2000    0.8000    0.2000    0.6000    0.8000    0.2000    0.8000    1.0000    2.0000    2.0000
+\par The parameter set found to have the best average fitness for the Two-Dimensional Griewank are the parameters
 
-1.1100e-16
+\fbox{\begin{minipage}{0.9\textwidth}
+\scriptsize
+Nomad Percentage (\%N) = 0.2 \\
+Roaming Percentage (\%R) = 0.8 \\
+Sex Percentage (\%S) = 0.2 \\
+Mating Rate (\%Ma) = 0.6 \\
+Mutation Probability = 0.8 \\
+Immigration Rate = 0.2 \\
+Percent Group Influence = 0.8 \\
+Ranked Selection Pressure = 2 \\
+Near to Best Random Pressure = 2 \\
+\textbf{Parameter Set Average Fitness: 1.1100e-16}
+\end{minipage}}
 
 \subsection{Three-Dimensional Griewank}
 
-4.0000    0.2000    0.6000    0.2000    0.3000    0.4000    0.8000    0.2000    1.0000    3.0000    3.0000
+\par The parameter set found to have the best average fitness for the Three-Dimensional Griewank are the parameters
 
-0.0064
+\fbox{\begin{minipage}{0.9\textwidth}
+\scriptsize
+Nomad Percentage (\%N) = 0.2 \\
+Roaming Percentage (\%R) = 0.6 \\
+Sex Percentage (\%S) = 0.2 \\
+Mating Rate (\%Ma) = 0.3 \\
+Mutation Probability = 0.4 \\
+Immigration Rate = 0.8 \\
+Percent Group Influence = 0.2 \\
+Ranked Selection Pressure = 3 \\
+Near to Best Random Pressure = 3 \\
+\textbf{Parameter Set Average Fitness: 0.0064}
+\end{minipage}}
+
+\par Notice that even using the same function design, the two-dimensional and the three-dimensional Griewank still doesn't have alike parameter sets. This is likely due to the search space of the three-dimensional Griewank being larger than that of the the two-dimensional Griewank. Due to the search space being larger, the three-dimensional function used a less arbitrary point generating parameter set for iLOA so that it could improve only the best solutions when found. 

@@ -1,5 +1,21 @@
 \section{Rosenbrock Function}
 
-4.0000    0.2000    0.8000    0.6000    0.6000    0.2000    0.8000    0.8000    1.0000    2.0000    3.0000
+\par The parameter set found to have the best average fitness for the Rosenbrock Function are the parameters
 
-3.3754e-14
+\fbox{\begin{minipage}{0.9\textwidth}
+\scriptsize
+Nomad Percentage (\%N) = 0.2 \\
+Roaming Percentage (\%R) = 0.8 \\
+Sex Percentage (\%S) = 0.6 \\
+Mating Rate (\%Ma) = 0.6 \\
+Mutation Probability = 0.2 \\
+Immigration Rate = 0.8 \\
+Percent Group Influence = 0.8 \\
+Ranked Selection Pressure = 2 \\
+Near to Best Random Pressure = 3 \\
+\textbf{Parameter Set Average Fitness: 3.3754e-14}
+\end{minipage}}
+
+\par The above parameter set focuses on more information sharing between points and less random generation of solutions. While there is a high roaming percentage, the nomads for this parameter set are minimal. The high immigration rate and percent group influence increases the chances for prides to exchange information within and to other prides and the minimal mutation probability decreases the randomness of solutions.
+
+\par Since the Rosenbrock function's surface has a ridge where the fitness tends to get better, this parameter set gives the algorithm a chance to focus on not losing more solutions and focus on improving the solutions that get to the narrow window of high fitness that is found on the ridge of the Rosenbrock function's surface while also influencing other solutions to reach the area.

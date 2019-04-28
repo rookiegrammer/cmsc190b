@@ -1,13 +1,44 @@
 \section{Rastrigin Function}
 
+\par The Rastrigin function, as defined in the earlier sections, is a non-convex function with a multi-dimensional form:
+$$
+f(x) = A n + \sum_{i=1}^n \left[x_i^2 - A\cos(2 \pi x_i)\right]
+$$
+
 \subsection{Three-Dimensional Rastrigin Function}
 
-4.0000    0.2000    0.8000    0.2000    0.6000    0.8000    0.8000    0.6000    1.0000    2.0000    3.0000
+\par The parameter set found to have the best average fitness for the three-dimensional Rastrigin is the parameters
 
-2.8400e-15
+\fbox{\begin{minipage}{0.9\textwidth}
+\scriptsize
+Nomad Percentage (\%N) = 0.2 \\
+Roaming Percentage (\%R) = 0.8 \\
+Sex Percentage (\%S) = 0.2 \\
+Mating Rate (\%Ma) = 0.6 \\
+Mutation Probability = 0.8 \\
+Immigration Rate = 0.8 \\
+Percent Group Influence = 0.6 \\
+Ranked Selection Pressure = 2 \\
+Near to Best Random Pressure = 3 \\
+\textbf{Parameter Set Average Fitness: 2.8400e-15}
+\end{minipage}}
 
 \subsection{Four-Dimensional Rastrigin Function}
 
-4.0000    0.4000    0.8000    0.8000    0.6000    0.6000    0.6000    0.8000    1.0000    2.0000    3.0000
+\par The parameter set found to have the best average fitness for the four-dimensional Rastrigin is the parameters
 
-0.1499
+\fbox{\begin{minipage}{0.9\textwidth}
+\scriptsize
+Nomad Percentage (\%N) = 0.4 \\
+Roaming Percentage (\%R) = 0.8 \\
+Sex Percentage (\%S) = 0.8 \\
+Mating Rate (\%Ma) = 0.6 \\
+Mutation Probability = 0.6 \\
+Immigration Rate = 0.6 \\
+Percent Group Influence = 0.8 \\
+Ranked Selection Pressure = 2 \\
+Near to Best Random Pressure = 3 \\
+\textbf{Parameter Set Average Fitness: 0.1499}
+\end{minipage}}
+
+\par While the three-dimensional function parameters has a low sex percentage (Percent females in prides, Percent males in nomads), the four-dimensional function paramaters does the opposite with a high sex percentage while balancing it with an increased nomad percentage. The four-dimensional function parameters also tries to decrease its mutation probability to focus on not losing the current solutions in the larger search space and improve those solutions for better ones. Also since the Rastrigin function has many optimas, the ``Near to Best'' Random Pressure is increased such that the solutions generated are near each other such that those new solutions likely would be generated next to an optima.
