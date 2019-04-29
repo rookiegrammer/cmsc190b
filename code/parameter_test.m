@@ -2,8 +2,8 @@ close all
 
 func_num=0;
 D=4;
-Xmin=-5;
-Xmax=5;
+Xmin=-90;
+Xmax=90;
 pop_size=50;
 iter_max=30;
 fhd = @fit_fun;
