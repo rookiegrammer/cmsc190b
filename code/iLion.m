@@ -18,7 +18,7 @@ classdef iLion < handle
         end
         
         function offsprings = mate(me,males,muprob,minval,maxval)
-            if me.sex ~= 'f'
+            if me.sex ~= 'f' || isempty(males)
                 offsprings = [];
                 return
             end
@@ -50,6 +50,8 @@ classdef iLion < handle
             o1.position = beta.*me.position + mbeta .* msum;
             o2.position = mbeta.*me.position + beta .* msum;
             
+            
+            
             % mutate
             if rand(1) <= 0.5 % only 1 can undergo mutation
                 tomutate = o1;
@@ -57,9 +59,17 @@ classdef iLion < handle
                 tomutate = o2;
             end
             
+            maxdata = max([males.pbestval], [], 2);
+            
+            maxind = find([males.pbestval]==maxdata);
+            if isempty(maxind)
+                maxind = 1;
+            end
+            maxloc = me.pbest - males(maxind(1)).pbest;
+            
             for i=1:length(tomutate.position)
                 if rand(1) <= muprob
-                    tomutate.position(i,1) = (maxval-minval)*rand()+minval;
+                    tomutate.position(i,1) = me.pbest(i)+maxloc(i)*(2*rand()-1);
                 end
             end
             
@@ -145,9 +155,7 @@ classdef iLion < handle
         end
         
         function print(me, style)
-            if me.plotted
-                delete(me.pplot);
-            else
+            if ~me.plotted
                 me.plotted = true;
             end
             

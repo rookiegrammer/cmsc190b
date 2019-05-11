@@ -1,4 +1,4 @@
-function [gbest,gbestval,fitcount] = iLOA_func(fit_fun,dimension,population,iterations,space_min,space_max,generated,title,setting,varargin)
+function [gbest,gbestval,fitcount,iter] = iLOA_func(fit_fun,dimension,population,iterations,space_min,space_max,generated,title,setting,varargin)
 
 if ischar(title)
     cur_date = title;
@@ -13,8 +13,11 @@ end
 % -----------------------
 
 % ________OPTIONS________
-view_fit_range=[0 5];
-view_3d_angle     = [-45 -45 90];
+convergence_mode = true; %#ok<*NASGU>
+convergence_tolerance = 0.001;
+
+view_fit_range   = [0 5];
+view_3d_angle    = [-45 -45 90];
 
 graph_function = false;
 print_lions = false;
@@ -29,22 +32,24 @@ limit = 150000;
 prides_length = 4;
 
 percent_nomad = 0.2;
-percent_roam = 0.2;
-percent_sex = 0.8;
+percent_roam = 0.8;
+percent_sex = 0.2;
 
-mating_rate = 0.3;
-mutation_prob = 0.2;
+mating_rate = 0.6;
+mutation_prob = 0.8;
 
-immigration_rate = 0.4;
+immigration_rate = 0.2;
 
-% ____NEW_PARAMETERS_____
-percent_influence = 0.4;
+% ____NEW_PARAMETERS______
+percent_influence = 0.8;
 do_annealing = true;
-selection_pressure = 3;
-nearness_pressure = 3;
+selection_pressure = 2;
+nearness_pressure = 2;
 
+% ______USERS_END_________
+% ________________________
 
-
+% Load object based passthrough settings
 if isobject(setting)
     prides_length = setting.numberOfPrides;
     percent_nomad = setting.percentNomad;
@@ -60,14 +65,16 @@ if isobject(setting)
 end
 
 % -----------------------
-
+% Initialize necessary variables
 fits = [];
 nomad_group = iGroup;
 nomad_group.anneal = do_annealing;
 pride_groups = iGroup.empty(0, prides_length);
+file_id = '';
 
 % -----------------------
 
+% Create Fitness Function Object
 adapt_fun = Fitness_Function;
 adapt_fun.function_handle = fit_fun;
 adapt_fun.function_argin = varargin;
@@ -188,46 +195,29 @@ for j=1:prides_length
     end
 end
 
+% Graph function for the first time
 if graph_function
     warning('off', 'MATLAB:fplot:NotVectorized')
-
-    if dimension == 1
-        base_fig = fplot(@(x) fit_fun(x, 0), [space_min space_max], '-g');
-    else
-        if dimension == 2
-            base_fig = fsurf(@(x,y) fit_fun([x y], 0),[space_min space_max space_min space_max]);
-            set(base_fig,'AdaptiveMeshDensity',0,'MeshDensity',60);
-        else
-            graph_function = false;
-        end
+    
+    if dimension > 2
+        graph_function = false;
     end
+    
+    do_graph_function();
 
     if ~print_lions && graph_function
         if print_graphics
-            print(['out/iloa-graph.png'], '-dpng');
+            print(['out/iloa-graph-' title '.png'], '-dpng'); %#ok<*UNRCH>
         end
     end
 end
 
+% Make axis for the lions
 if print_lions
-
-    if dimension == 1
-        figure(figure)
-        axis([space_min space_max view_fit_range]);
-        xlabel('x_1')
-        ylabel('f(X)')
-    else
-        if dimension == 2
-            figure(figure)
-            axis([space_min space_max space_min space_max view_fit_range]);
-            view(view_3d_angle); % 3D angle
-            xlabel('x_1')
-            ylabel('x_2')
-            zlabel('f(X)')
-        end
-    end
+    do_make_axis();
 end
 
+% Do a first time plot or surface for the function and lions in canvas
 if print_lions
 
     hold on;
@@ -241,7 +231,7 @@ if print_lions
     fprintf('- Best Fitness: %g\n', global_best_fitness);
 
     if graph_function
-        copyobj(base_fig,gca);
+        do_graph_function();
     end
 
     if print_graphics
@@ -251,6 +241,7 @@ if print_lions
     hold off;
 end
 
+% Start creating info text file
 if print_statistics
     LogicalStr = {'false', 'true'};
     file_id = fopen(['out/iloa-iter-stats-' cur_date '.txt'], 'wt');
@@ -277,54 +268,49 @@ end
 % Start Generations
 % -----------------------
 
-if print_statistics
-        if print_all_fitness
-          fprintf(file_id, '\n');
-          lfits = [];
-          for j=1:prides_length
-            pfits = pride_groups(j).fitnesses();
-            fprintf(file_id, '%g, ', pfits );
-            lfits = [lfits pfits];
-          end
-          nfits = nomad_group.fitnesses();
-          fprintf(file_id, '%g, ', nfits );
-          lfits = [lfits nfits];
-          
-          fits = [fits; lfits NaN(1,size(fits,2)-length(lfits))];
-          fprintf(file_id, '\n' );
-        end
+% Print lions in info text
+if print_statistics && print_all_fitness
+    do_print_fitness();
 end
 
+% Start the loop until max iteration
 for i=1:iterations
 
     if print_lions
         fprintf('Iteration %d\n', i);
     end
-
+    
+    % Process all pride lions
     for j=1:prides_length
         iter_gpr = pride_groups(j);
         iter_gpr.recount();
         iter_gpr.do_pride_fem(percent_roam,space_min,space_max, adapt_fun, percent_influence,selection_pressure);
         iter_gpr.do_pride_mal(percent_roam, adapt_fun,space_min,space_max, percent_influence,selection_pressure);
+    end
+    
+    for j=1:prides_length
+        iter_gpr = pride_groups(j);
         iter_gpr.mate(mating_rate,mutation_prob,space_min,space_max,adapt_fun,selection_pressure);
         iter_gpr.equilibriate(nomad_group,percent_sex);
-        pride_groups(j) = iter_gpr;
     end
-
+    
+    % Process nomad group next
     nomad_group.recount();
     nomad_group.do_nomad_all(space_min, space_max, adapt_fun, global_best, nearness_pressure);
   	nomad_group.mate(mating_rate,mutation_prob,space_min,space_max,adapt_fun,selection_pressure);
   	nomad_group.invade(pride_groups);
-
+    
+    % Continue with prides emigration
     for j=1:prides_length
 		iter_gpr = pride_groups(j);
 		iter_gpr.emigrate(percent_sex,immigration_rate,nomad_group);
     end
-
+    
+    % Finish with nomad_group 
  	nomad_group.immigrate(pride_groups,percent_sex);
 	nomad_group.equilibriate(nomad_group,percent_sex);
 
-    % CHECK FITNESS
+    % CHECK FITNESS Get minimum
     if nomad_group.lbestval < global_best_fitness
         global_best_fitness = nomad_group.lbestval;
         global_best = nomad_group.lbest;
@@ -337,26 +323,12 @@ for i=1:iterations
         end
     end
 
-    if print_statistics
-        if print_all_fitness
-          fprintf(file_id, '\n');
-          lfits = [];
-          for j=1:prides_length
-            pfits = pride_groups(j).fitnesses();
-            fprintf(file_id, '%g, ', pfits );
-            lfits = [lfits pfits];
-          end
-          nfits = nomad_group.fitnesses();
-          fprintf(file_id, '%g, ', nfits );
-          lfits = [lfits nfits];
-          
-          fits = [fits; lfits NaN(1,size(fits,2)-length(lfits))];
-          fprintf(file_id, '\n' );
-        else
-          fprintf(file_id, '\n%g', global_best_fitness);
-        end
+    % Print to info text
+    if print_statistics && print_all_fitness
+        do_print_fitness();
     end
-
+    
+    % Create preview graph
     if print_lions
 
         cla
@@ -374,7 +346,7 @@ for i=1:iterations
         fprintf('- Best Fitness: %g\n', global_best_fitness);
 
         if graph_function
-            copyobj(base_fig,gca);
+            do_graph_function();
         end
 
         if print_graphics
@@ -384,13 +356,21 @@ for i=1:iterations
         hold off;
         pause(0.0001)
     end
-
+    
+    if check_converge()
+        break;
+    end
+    
+    % Check limit evaluation count
     if adapt_fun.fitness_count >= limit
         break;
     end
+    
+    
 
 end
 
+% Append to text with summary
 if print_statistics
     fprintf(file_id, '\nBest:\n(');
     fprintf(file_id, '%g, ', global_best);
@@ -407,10 +387,72 @@ if print_statistics
     fclose(file_id);
 end
 
+% Generate output
 gbest = global_best';
 gbestval = global_best_fitness;
 fitcount = adapt_fun.fitness_count;
+iter = i;
 
-csvwrite(['out/iloa-fits-' cur_date '.csv'], fits);
+if ~isempty(fits)
+    csvwrite(['out/iloa-fits-' cur_date '.csv'], fits);
+end
+
+
+    function converged = check_converge()
+        pbestvals = [];
+        for z=1:prides_length
+            pbestvals = [pbestvals [pride_groups(z).all_lions().pbestval]];
+        end
+        vals = abs(max(pbestvals)-min(pbestvals));
+        converged = vals <= convergence_tolerance;
+        
+    end
+
+    function do_graph_function()
+        if dimension == 1
+            fplot(@(x) fit_fun(x, 0), [space_min space_max], '-g');
+        else
+            if dimension == 2
+                base_fig = fsurf(@(x,y) fit_fun([x y], 0),[space_min space_max space_min space_max]);
+                set(base_fig,'AdaptiveMeshDensity',0,'MeshDensity',60);
+            end
+        end
+    end
+
+    function do_make_axis()
+        if dimension == 1
+            figure(figure)
+            axis([space_min space_max view_fit_range]);
+            xlabel('x_1')
+            ylabel('f(X)')
+        else
+            if dimension == 2
+                figure(figure)
+                axis([space_min space_max space_min space_max view_fit_range]);
+                view(view_3d_angle); % 3D angle
+                xlabel('x_1')
+                ylabel('x_2')
+                zlabel('f(X)')
+            end
+        end
+    end
+
+    function do_print_fitness()
+        fprintf(file_id, '\n');
+        lfits = [];
+        for z=1:prides_length
+            pfits = pride_groups(z).fitnesses();
+            fprintf(file_id, '%g, ', pfits );
+            lfits = [lfits pfits]; %#ok<*AGROW>
+        end
+        nfits = nomad_group.fitnesses();
+        fprintf(file_id, '%g, ', nfits );
+        lfits = [lfits nfits];
+
+        fits = [fits; lfits NaN(1,size(fits,2)-length(lfits))];
+        fprintf(file_id, '\n' );
+    end
 
 end
+
+
