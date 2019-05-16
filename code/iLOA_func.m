@@ -13,17 +13,17 @@ end
 % -----------------------
 
 % ________OPTIONS________
-convergence_mode = true; %#ok<*NASGU>
+convergence_mode = false; %#ok<*NASGU>
 convergence_tolerance = 0.001;
 
 view_fit_range   = [0 5];
-view_3d_angle    = [-45 -45 90];
+view_3d_angle    = [0 0 90];
 
-graph_function = false;
-print_lions = false;
+graph_function = true;
+print_lions = true;
 print_graphics = false; % Save Iterations Images to File
-print_statistics = false; % Save Statistics per Iteration to file
-print_all_fitness = false;
+print_statistics = true; % Save Statistics per Iteration to file
+print_all_fitness = true;
 print_end_population = false;
 
 limit = 150000;
@@ -89,6 +89,8 @@ rand_lio = rand(dimension, population).*(space_max-space_min)+space_min;
 else
 rand_lio = generated;
 end
+
+disp(rand_lio)
 
 % Initialize First Lion Objects
 rand_pop = iLion.empty(0,population);
@@ -217,22 +219,23 @@ if print_lions
     do_make_axis();
 end
 
+
 % Do a first time plot or surface for the function and lions in canvas
 if print_lions
 
     hold on;
+    fprintf('- Best Fitness: %g\n', global_best_fitness);
 
+    if graph_function
+        do_graph_function();
+    end
+    
     % PRINT ALL
     for j=1:prides_length
         iter_gpr = pride_groups(j);
         iter_gpr.print();
     end
     nomad_group.print();
-    fprintf('- Best Fitness: %g\n', global_best_fitness);
-
-    if graph_function
-        do_graph_function();
-    end
 
     if print_graphics
         print(['out/iloa-iter-0-' cur_date '.png'], '-dpng');
@@ -333,6 +336,12 @@ for i=1:iterations
 
         cla
         hold on;
+        
+        if graph_function
+            do_graph_function();
+        end
+        
+        
 
         % PRINT ALL
         for j=1:prides_length
@@ -345,16 +354,14 @@ for i=1:iterations
 
         fprintf('- Best Fitness: %g\n', global_best_fitness);
 
-        if graph_function
-            do_graph_function();
-        end
+        
 
         if print_graphics
             print(['out/iloa-iter-' num2str(i) '-' cur_date '.png'], '-dpng');
         end
 
         hold off;
-        pause(0.0001)
+        pause(0.01)
     end
     
     if check_converge()
@@ -419,6 +426,8 @@ end
         end
     end
 
+
+
     function do_make_axis()
         if dimension == 1
             figure(figure)
@@ -449,7 +458,7 @@ end
         fprintf(file_id, '%g, ', nfits );
         lfits = [lfits nfits];
 
-        fits = [fits; lfits NaN(1,size(fits,2)-length(lfits))];
+        fits = [fits lfits];
         fprintf(file_id, '\n' );
     end
 

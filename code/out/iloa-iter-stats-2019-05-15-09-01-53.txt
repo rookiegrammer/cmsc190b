@@ -1,0 +1,32 @@
+Iterations: 0
+Function Evaluations Limit: 150000
+Population: 30
+
+Prides Length: 4
+
+Percent Nomads: 0.2
+Percent Roaming: 0.8
+Percent Sex: 0.2
+
+Mating Rate: 0.6
+Mutation Probability: 0.8
+Immigration Rate: 0.2
+
+Percent Group Influence: 0.8
+Annealing On: true
+Ranked Selection Pressure: 2
+Near To Best Random Pressure: 2
+
+Dimensions: 2
+N-Dimension Space: -10:10
+
+Fitness Iterations:
+17.1924 (Initial Best)
+
+104.357, 57.3229, 99.6864, 69.5482, 34.0645, 97.0523, 97.6924, 127.745, 185.352, 101.746, 124.322, 103.902, 123.678, 50.4128, 115.823, 108.153, 17.1924, 141.492, 63.4381, 30.7114, 79.0086, 119.288, 120.617, 97.8746, 124.493, 66.0569, 27.5667, 66.6438, 100.661, 115.767, 
+
+Best:
+(-4.01412, -1.01003, )
+
+Fitness Evaluations:
+30

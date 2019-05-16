@@ -2,11 +2,11 @@ close all
 format shortE
 
 func_num=0;
-D=1;
-Xmin=-5;
-Xmax=5;
-pop_size=100;
-iter_max=200;
+D=2;
+Xmin=-10;
+Xmax=10;
+pop_size=30;
+iter_max=0;
 fhd = @fit_fun;
 
 rand_lio = rand(D, pop_size).*(Xmax-Xmin)+Xmin;
@@ -19,7 +19,7 @@ cur_date = char(cur_date);
 [gbest2,gbestval2,FES2, i] = iLOA_func(fhd,D,pop_size,iter_max,Xmin,Xmax,rand_lio,cur_date,NaN,func_num)
 
 % function fitness = fit_fun(pos, n)
-%     fitness = (pos(1)*pi/100)^2;
+%     fitness = pos(1)^2 + (pos(2)+1)^2 + 5;
 % end
 
 % RASTRIGIN (0, 0) minima n(5) [0,50]
