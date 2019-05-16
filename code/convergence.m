@@ -2,9 +2,9 @@ close all
 format shortE
 
 func_num=0;
-D=2;
-Xmin=-100;
-Xmax=100;
+D=4;
+Xmin=-2*pi;
+Xmax=2*pi;
 pop_size=100;
 fhd = @fit_fun;
 runs = 100;
@@ -13,7 +13,7 @@ iter_maxs=[40 80 120 160 200];
 
 cur_date = datetime;
 cur_date.Format = 'uuuu-MM-dd-HH-mm-ss';
-cur_date = char(cur_date);
+cur_date = ['rast4d-' char(cur_date)];
 
 dataq = parallel.pool.DataQueue;
 % After receiving new data, update_progress() will be called
@@ -49,19 +49,19 @@ end
 % end
 
 % RASTRIGIN (0, 0) minima n(5) [0,50]
-% function fitness = fit_fun(pos, n)
-%     dimensions = length(pos);
-%     fitness = 10*dimensions;
-%     for i=1:dimensions
-%         xi = pos(i);
-%         fitness = fitness + xi ^ 2 - 10 * cos(2*pi*xi);
-%     end
-% end
+function fitness = fit_fun(pos, n)
+    dimensions = length(pos);
+    fitness = 10*dimensions;
+    for i=1:dimensions
+        xi = pos(i);
+        fitness = fitness + xi ^ 2 - 10 * cos(2*pi*xi);
+    end
+end
 
 % ROSENBROCK2d (0, 0) minima n(5) [0,10000]
-function fitness = fit_fun(pos, n)
-    fitness = (1-pos(1))^2 + 100*(pos(2) - pos(1)^2)^2;
-end
+% function fitness = fit_fun(pos, n)
+%     fitness = (1-pos(1))^2 + 100*(pos(2) - pos(1)^2)^2;
+% end
 
 % function fitness = fit_fun(pos, n)
 %     dimensions = length(pos);

@@ -34,14 +34,14 @@ limit = 150000000;
 % ______PARAMETERS_______
 prides_length = 4;
 
-percent_nomad = 0.2;
+percent_nomad = 0.4;
 percent_roam = 0.8;
-percent_sex = 0.6;
+percent_sex = 0.8;
 
 mating_rate = 0.6;
-mutation_prob = 0.2;
+mutation_prob = 0.6;
 
-immigration_rate = 0.8;
+immigration_rate = 0.6;
 
 % ____NEW_PARAMETERS______
 percent_influence = 0.8;
@@ -206,6 +206,8 @@ for j=1:prides_length
     end
 end
 
+figure(1);
+
 % Graph function for the first time
 if graph_function
     warning('off', 'MATLAB:fplot:NotVectorized')
@@ -213,8 +215,6 @@ if graph_function
     if dimension > 2
         graph_function = false;
     end
-    
-    figure(1);
     
     do_graph_function();
 
@@ -227,8 +227,6 @@ end
 
 % Make axis for the lions
 if print_lions
-    figure(2)
-    do_graph_function();
     do_make_axis();
 end
 
@@ -404,9 +402,8 @@ end
 
 if graph_convergence
     figure(3)
+    xlabel('');
     plot(conv_plot(:,1), conv_plot(:,2))
-    xlabel('Iteration');
-    ylabel('Max(P)-Min(P)');
     if print_convergence
         print(['out/iloa-conv-' cur_date '.png'], '-dpng');
     end
@@ -448,11 +445,13 @@ end
 
     function do_make_axis()
         if dimension == 1
+            figure(2)
             axis([space_min space_max view_fit_range]);
             xlabel('x_1')
             ylabel('f(X)')
         else
             if dimension == 2
+                figure(2)
                 axis([space_min space_max space_min space_max view_fit_range]);
                 view(view_3d_angle); % 3D angle
                 xlabel('x_1')
